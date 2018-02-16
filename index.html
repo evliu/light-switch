@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Lights">
+	<link rel="apple-touch-icon" href="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/light-bulb-icon.png">
+	<link rel="apple-touch-startup-image" href="https://media.istockphoto.com/photos/glowing-light-bulb-picture-id510484196?k=6&m=510484196&s=612x612&w=0&h=QgNfqJbvw2iEkyUyAyyPI1Brd16GXShdxYpHuk-OkWY=">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"/>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+	<title>Lights</title>
+	<style>
+		html {
+			background-color: #333;
+			font-family: GillSans, Calibri, Trebuchet, sans-serif;
+		}
+		.btn {
+			margin: 15px;
+			border-radius: 50px;
+			height: 100%;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			height: 100vh;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<button onclick="On()" class="btn z-depth-5 waves-effect waves-yellow yellow lighten-5 grey-text text-darken-2">
+			<i class="material-icons left">lightbulb_outline</i> On
+		</button>
+		<button onclick="Dim()" class="btn z-depth-5 waves-effect waves-orange orange lighten-4 deep-orange-text text-darken-5">
+			<i class="material-icons left">lightbulb_outline</i> Dim
+		</button>
+		<button onclick="Night()" class="btn z-depth-5 waves-effect waves-deep-orange deep-orange">
+			<i class="material-icons left">lightbulb_outline</i> Nightlight
+		</button>
+		<button onclick="Off()" class="btn z-depth-5 waves-effect waves-default blue-grey darken-4">
+			<i class="material-icons left">lightbulb_outline</i> Off
+		</button>
+	</div>
+	<script>
+		const fire = (url, payload) => {
+			fetch(url, payload)
+			.then(resp => {
+				console.log('response: ', resp)
+			})
+			.catch(err => {
+				Materialize.toast('Failed...', 3000, 'rounded red');
+				console.error('error: ', err)
+			});
+		}
+
+		const url = 'http://Philips-hue.local/api/mYfspD2jxOTZ9Pmh/groups/1/action';
+		let payload = {method: "PUT"};
+
+		const On = () => {
+			payload.body = '{"hue":15394, "sat":117, "bri":254, "on":true, "transitiontime":1}';
+			fire(url, payload);
+		};
+
+		const Dim = () => {
+			payload.body = '{"hue":15394, "sat":117, "bri":77, "on":true, "transitiontime":1}';
+			fire(url, payload);
+		}
+
+		const Night = () => {
+			payload.body = '{"hue":10778, "sat":251, "bri":1, "on":true, "transitiontime":1}';
+			fire(url, payload);
+		}
+
+		const Off = () => {
+			payload.body = '{"on": false, "transitiontime":1}';
+			fire(url, payload);
+		}
+
+		document.body.addEventListener('touchmove', (event) => event.preventDefault(), false);
+	</script>
+</body>
+</html>
